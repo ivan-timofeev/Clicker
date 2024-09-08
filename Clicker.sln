@@ -1,0 +1,48 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clicker.Api", "Clicker.Api\Clicker.Api.csproj", "{9A0EF02D-7955-4A6F-8FAD-3F7211B13791}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{8CA2E08C-81FD-402D-85F0-A14272A9FF0C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{7910022D-31F8-4596-91A4-4DD523E317D4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{48C6BF48-EB24-4EF6-90AA-8C69F1589D72}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clicker.Domain", "Clicker.Domain\Clicker.Domain.csproj", "{D49AA5EA-A090-47E4-A76F-0D00E8A9A7EE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{F9973245-33A0-4FF0-9A2B-B3D3F7DCFE67}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clicker.Application", "Clicker.Application\Clicker.Application.csproj", "{F04DD378-E0EA-4183-A404-67247C86BACF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clicker.Infrastructure", "Clicker.Infrastructure\Clicker.Infrastructure.csproj", "{545576F1-010A-4BB6-8450-4D1CD19DC825}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9A0EF02D-7955-4A6F-8FAD-3F7211B13791}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A0EF02D-7955-4A6F-8FAD-3F7211B13791}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A0EF02D-7955-4A6F-8FAD-3F7211B13791}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A0EF02D-7955-4A6F-8FAD-3F7211B13791}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D49AA5EA-A090-47E4-A76F-0D00E8A9A7EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D49AA5EA-A090-47E4-A76F-0D00E8A9A7EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D49AA5EA-A090-47E4-A76F-0D00E8A9A7EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D49AA5EA-A090-47E4-A76F-0D00E8A9A7EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F04DD378-E0EA-4183-A404-67247C86BACF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F04DD378-E0EA-4183-A404-67247C86BACF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F04DD378-E0EA-4183-A404-67247C86BACF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F04DD378-E0EA-4183-A404-67247C86BACF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{545576F1-010A-4BB6-8450-4D1CD19DC825}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{545576F1-010A-4BB6-8450-4D1CD19DC825}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{545576F1-010A-4BB6-8450-4D1CD19DC825}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{545576F1-010A-4BB6-8450-4D1CD19DC825}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9A0EF02D-7955-4A6F-8FAD-3F7211B13791} = {8CA2E08C-81FD-402D-85F0-A14272A9FF0C}
+		{D49AA5EA-A090-47E4-A76F-0D00E8A9A7EE} = {7910022D-31F8-4596-91A4-4DD523E317D4}
+		{F04DD378-E0EA-4183-A404-67247C86BACF} = {F9973245-33A0-4FF0-9A2B-B3D3F7DCFE67}
+		{545576F1-010A-4BB6-8450-4D1CD19DC825} = {48C6BF48-EB24-4EF6-90AA-8C69F1589D72}
+	EndGlobalSection
+EndGlobal
