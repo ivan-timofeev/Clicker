@@ -1,6 +1,5 @@
-﻿using Clicker.Application.Dto;
-using Clicker.Application.Features;
-using Clicker.Domain.Interfaces;
+﻿using Clicker.Application.Requests;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Clicker.Api.Controllers;
@@ -9,23 +8,20 @@ namespace Clicker.Api.Controllers;
 [Route("api/users/{userId}/clicks")]
 public class UsersClicksController : Controller
 {
-    private readonly IUsersRepository _usersRepository;
+    private readonly IMediator _mediator;
 
-    public UsersClicksController(IUsersRepository usersRepository)
+    public UsersClicksController(IMediator mediator)
     {
-        _usersRepository = usersRepository;
+        _mediator = mediator;
     }
 
     [HttpPost]
     public async Task ProcessClickSequence(
         [FromRoute] string userId,
-        [FromBody] int userClicks,
+        [FromBody] int clicksQuantity,
         CancellationToken cancellationToken)
     {
-        var user = await GetUser.Create(_usersRepository).ExecuteAsync(userId, cancellationToken);
-
-        await ProcessUserClicksSequence
-            .Create(_usersRepository)
-            .ExecuteAsync(new ProcessUserClicksSequenceRequest { User = user, UserClicks = userClicks }, cancellationToken);
+        var user = await _mediator.Send(new GetUserRequest(userId), cancellationToken);
+        await _mediator.Send(new ProcessUserClicksSequenceRequest(user, clicksQuantity), cancellationToken);
     }
 }

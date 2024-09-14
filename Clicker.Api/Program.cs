@@ -1,11 +1,14 @@
 using System.Text.Json.Serialization;
 using Clicker.Api.Graphql.Queries;
 using Clicker.Api.Middlewares;
+using Clicker.Application.Requests;
 using Clicker.Infrastructure.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddMediatR(c => c.RegisterServicesFromAssembly(typeof(AuthenticateRequest).Assembly));
 
 builder
     .Services

@@ -1,7 +1,8 @@
 using Clicker.Api.Extensions;
 using Clicker.Api.Models;
+using Clicker.Application.Requests;
 using Clicker.Domain.Constants.Exceptions;
-using Clicker.Domain.Interfaces;
+using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
@@ -13,11 +14,11 @@ namespace Clicker.Api.Controllers.Auth;
 [Route("api/auth/google")]
 public class UsersClicksController : Controller
 {
-    private readonly IGoogleAuthService _googleAuthService;
+    private readonly IMediator _mediator;
 
-    public UsersClicksController(IGoogleAuthService googleAuthService)
+    public UsersClicksController(IMediator mediator)
     {
-        _googleAuthService = googleAuthService;
+        _mediator = mediator;
     }
     
     [HttpGet("login")]
@@ -37,7 +38,7 @@ public class UsersClicksController : Controller
         }
 
         var googleUserId = authenticateResult.GetGoogleUserId();
-        var user = await _googleAuthService.AuthenticateAsync(googleUserId, cancellationToken);
+        var user = await _mediator.Send(new AuthenticateRequest(googleUserId), cancellationToken);
 
         return UserDto.FromModel(user);
     }
