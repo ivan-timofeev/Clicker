@@ -1,11 +1,25 @@
 using Clicker.Application.Builder;
-using Clicker.Application.Requests;
 using Clicker.Domain.Entities;
 using MediatR;
 
-namespace Clicker.Application.RequestHandlers;
+namespace Clicker.Application.Features;
 
-public class AddGoogleAuthenticatorToUserHandler : IRequestHandler<AddGoogleAuthenticatorToUserRequest>
+public class AddGoogleAuthenticatorToUserRequest : IRequest
+{
+    public User User { get; }
+    public string GoogleUserId { get; }
+
+    public AddGoogleAuthenticatorToUserRequest(User user, string googleUserId)
+    {
+        ArgumentNullException.ThrowIfNull(user);
+        ArgumentException.ThrowIfNullOrWhiteSpace(googleUserId);
+
+        User = user;
+        GoogleUserId = googleUserId;
+    }
+}
+
+public class AddGoogleAuthenticatorToUserRequestHandler : IRequestHandler<AddGoogleAuthenticatorToUserRequest>
 {
     public Task Handle(AddGoogleAuthenticatorToUserRequest request, CancellationToken cancellationToken)
     {
