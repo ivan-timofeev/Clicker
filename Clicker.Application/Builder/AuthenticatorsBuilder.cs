@@ -1,7 +1,7 @@
 using Clicker.Domain.Entities;
 using Clicker.Domain.Interfaces;
 
-namespace Clicker.Application.Builders;
+namespace Clicker.Application.Builder;
 
 public class AuthenticatorsBuilder
 {

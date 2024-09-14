@@ -1,24 +1,25 @@
-﻿using Clicker.Application.Dto;
+﻿using Clicker.Application.Requests;
 using Clicker.Domain.Constants.Exceptions;
 using Clicker.Domain.Entities;
 using Clicker.Domain.Interfaces;
+using MediatR;
 
-namespace Clicker.Application.Features;
+namespace Clicker.Application.RequestHandlers;
 
-public class CreateUser
+public class CreateUserHandler : IRequestHandler<CreateUserRequest, User>
 {
     private readonly IUserLoginAvailabilityChecker _userLoginAvailabilityChecker;
     private readonly IUsersRepository _usersRepository;
 
-    private CreateUser(
+    public CreateUserHandler(
         IUserLoginAvailabilityChecker userLoginAvailabilityChecker,
         IUsersRepository usersRepository)
     {
         _userLoginAvailabilityChecker = userLoginAvailabilityChecker;
         _usersRepository = usersRepository;
     }
-    
-    public async Task<User> ExecuteAsync(CreateUserRequest request, CancellationToken cancellationToken)
+
+    public async Task<User> Handle(CreateUserRequest request, CancellationToken cancellationToken)
     {
         var isLoginAvailable = await _userLoginAvailabilityChecker.IsLoginAvailableAsync(request.Login, cancellationToken);
 
@@ -36,14 +37,5 @@ public class CreateUser
 
         await _usersRepository.AddUserAsync(user, cancellationToken);
         return user;
-    }
-
-    public static CreateUser Create(
-        IUserLoginAvailabilityChecker userLoginAvailabilityChecker,
-        IUsersRepository usersRepository)
-    {
-        ArgumentNullException.ThrowIfNull(userLoginAvailabilityChecker);
-        ArgumentNullException.ThrowIfNull(usersRepository);
-        return new CreateUser(userLoginAvailabilityChecker, usersRepository);
     }
 }

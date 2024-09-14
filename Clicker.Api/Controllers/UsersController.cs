@@ -1,7 +1,6 @@
 ﻿using Clicker.Api.Models;
-using Clicker.Application.Dto;
-using Clicker.Application.Features;
-using Clicker.Domain.Interfaces;
+using Clicker.Application.Requests;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Clicker.Api.Controllers;
@@ -10,33 +9,29 @@ namespace Clicker.Api.Controllers;
 [Route("api/users")]
 public class UsersController : Controller
 {
-    private readonly IUsersRepository _usersRepository;
-    private readonly IUserLoginAvailabilityChecker _userLoginAvailabilityChecker;
+    private readonly IMediator _mediator;
 
-    public UsersController(
-        IUsersRepository usersRepository,
-        IUserLoginAvailabilityChecker userLoginAvailabilityChecker)
+    public UsersController(IMediator mediator)
     {
-        _usersRepository = usersRepository;
-        _userLoginAvailabilityChecker = userLoginAvailabilityChecker;
+        _mediator = mediator;
     }
 
     [HttpGet("{userId}")]
-    public async Task<UserDto> GetUserAsync([FromRoute] string userId, CancellationToken cancellationToken)
+    public async Task<UserDto> GetUserAsync(
+        [FromRoute] string userId,
+        CancellationToken cancellationToken)
     {
-        var user = await GetUser
-            .Create(_usersRepository)
-            .ExecuteAsync(userId, cancellationToken);
+        var user = await _mediator.Send(new GetUserRequest(userId), cancellationToken);
 
         return UserDto.FromModel(user);
     }
 
     [HttpPost]
-    public async Task<UserDto> CreateUserAsync([FromBody] CreateUserRequest createUserRequest, CancellationToken cancellationToken)
+    public async Task<UserDto> CreateUserAsync(
+        [FromBody] CreateUserRequest createUserRequest,
+        CancellationToken cancellationToken)
     {
-        var createdUser = await CreateUser
-            .Create(_userLoginAvailabilityChecker, _usersRepository)
-            .ExecuteAsync(createUserRequest, cancellationToken);
+        var createdUser = await _mediator.Send(createUserRequest, cancellationToken);
 
         return UserDto.FromModel(createdUser);
     }
