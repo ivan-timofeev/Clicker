@@ -1,8 +1,31 @@
 using System.Text.Json.Serialization;
 using Clicker.Api.Graphql.Queries;
+using Clicker.Api.Middlewares;
 using Clicker.Infrastructure.DependencyInjection;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder
+    .Services
+    .AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+        options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+    })
+    .AddCookie()
+    .AddGoogle(googleOptions =>
+    {
+        googleOptions.ClientId = builder.Configuration["GoogleAuth:ClientId"]
+            ?? throw new InvalidOperationException("Secrets must contain GoogleAuth:ClientId.");
+        googleOptions.ClientSecret = builder.Configuration["GoogleAuth:ClientSecret"]
+            ?? throw new InvalidOperationException("Secrets must contain GoogleAuth:ClientSecret.");
+        googleOptions.CallbackPath = "/signin-google";
+        googleOptions.Scope.Add("email");
+        googleOptions.Scope.Add("profile");
+    });
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -25,6 +48,9 @@ builder.Services.AddInMemoryInfrastructure();
 builder.Services.AddDatabaseSeeder();
 
 var app = builder.Build();
+app.UseMiddleware<ExceptionMiddleware>();
+app.UseAuthentication();
+app.UseAuthorization();
 
 app
     .UseRouting()

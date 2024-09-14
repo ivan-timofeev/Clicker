@@ -13,7 +13,8 @@ public static class ServiceCollectionExtensions
         serviceCollection
             .AddSingleton<InMemoryUsersStorage>()
             .AddTransient<IUsersRepository, InMemoryUsersRepository>()
-            .AddTransient<IUserLoginAvailabilityChecker, InMemoryUserLoginAvailabilityChecker>();
+            .AddTransient<IUserLoginAvailabilityChecker, InMemoryUserLoginAvailabilityChecker>()
+            .AddTransient<IGoogleAuthService, GoogleAuthService>();
 
         return serviceCollection;
     }

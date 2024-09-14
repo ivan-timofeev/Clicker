@@ -34,7 +34,7 @@ public class CreateUser
             Balance = 0
         };
 
-        await _usersRepository.SaveUserAsync(user, cancellationToken);
+        await _usersRepository.AddUserAsync(user, cancellationToken);
         return user;
     }
 

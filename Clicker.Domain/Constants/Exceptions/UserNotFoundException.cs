@@ -2,10 +2,11 @@
 
 public class UserNotFoundException : UnfeasibleOperationException
 {
-    public string UserId { get; }
+    public override string ExceptionSystemName => "UserNotFound";
 
     public UserNotFoundException(string userId)
+        : base("User with provided userId not found.")
     {
-        UserId = userId;
+        Details.Add("userId", userId);
     }
 }

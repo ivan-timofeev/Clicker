@@ -5,7 +5,7 @@ namespace Clicker.Domain.Interfaces;
 
 public interface IUsersRepository
 {
-    Task SaveUserAsync(User user, CancellationToken cancellationToken);
+    Task AddUserAsync(User user, CancellationToken cancellationToken);
     
     /// <summary>
     /// Asynchronously retrieves a user by their unique identifier.
@@ -22,4 +22,6 @@ public interface IUsersRepository
     Task<User> GetUserAsync(string userId, CancellationToken cancellationToken);
     
     Task UpdateUserAsync(User user, CancellationToken cancellationToken);
+    
+    IQueryable<User> Users { get; }
 }
