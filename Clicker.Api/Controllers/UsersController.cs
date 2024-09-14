@@ -1,5 +1,5 @@
 ﻿using Clicker.Api.Models;
-using Clicker.Application.Requests;
+using Clicker.Application.Features;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

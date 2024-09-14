@@ -1,17 +1,27 @@
-﻿using Clicker.Application.Requests;
-using Clicker.Domain.Constants.Exceptions;
+﻿using Clicker.Domain.Constants.Exceptions;
 using Clicker.Domain.Entities;
 using Clicker.Domain.Interfaces;
 using MediatR;
 
-namespace Clicker.Application.RequestHandlers;
+namespace Clicker.Application.Features;
 
-public class CreateUserHandler : IRequestHandler<CreateUserRequest, User>
+public class CreateUserRequest : IRequest<User>
+{
+    public string Login { get; }
+
+    public CreateUserRequest(string login)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(login);
+        Login = login;
+    }
+}
+
+public class CreateUserRequestHandler : IRequestHandler<CreateUserRequest, User>
 {
     private readonly IUserLoginAvailabilityChecker _userLoginAvailabilityChecker;
     private readonly IUsersRepository _usersRepository;
 
-    public CreateUserHandler(
+    public CreateUserRequestHandler(
         IUserLoginAvailabilityChecker userLoginAvailabilityChecker,
         IUsersRepository usersRepository)
     {

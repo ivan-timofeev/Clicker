@@ -1,7 +1,7 @@
 using System.Text.Json.Serialization;
 using Clicker.Api.Graphql.Queries;
 using Clicker.Api.Middlewares;
-using Clicker.Application.Requests;
+using Clicker.Application.Features;
 using Clicker.Infrastructure.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;

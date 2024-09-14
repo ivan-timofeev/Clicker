@@ -1,6 +1,6 @@
 using Clicker.Api.Extensions;
 using Clicker.Api.Models;
-using Clicker.Application.Requests;
+using Clicker.Application.Features;
 using Clicker.Domain.Constants.Exceptions;
 using MediatR;
 using Microsoft.AspNetCore.Authentication;

@@ -1,21 +1,31 @@
-using Clicker.Application.Requests;
 using Clicker.Domain.Entities;
 using MediatR;
 
-namespace Clicker.Application.RequestHandlers;
+namespace Clicker.Application.Features;
 
-public class AuthenticateHandler : IRequestHandler<AuthenticateRequest, User>
+public class AuthenticateRequest : IRequest<User>
+{
+    public string GoogleUserId { get; }
+
+    public AuthenticateRequest(string googleUserId)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(googleUserId);
+        GoogleUserId = googleUserId;
+    }
+}
+
+public class AuthenticateRequestHandler : IRequestHandler<AuthenticateRequest, User>
 {
     private readonly IMediator _mediator;
 
-    public AuthenticateHandler(IMediator mediator)
+    public AuthenticateRequestHandler(IMediator mediator)
     {
         _mediator = mediator;
     }
     
     public async Task<User> Handle(AuthenticateRequest request, CancellationToken cancellationToken)
     {
-        var user = await _mediator.Send(new FindUserByGoogleUserId(request.GoogleUserId), cancellationToken);
+        var user = await _mediator.Send(new FindUserByGoogleUserIdRequest(request.GoogleUserId), cancellationToken);
         if (user != default)
         {
             return user;
