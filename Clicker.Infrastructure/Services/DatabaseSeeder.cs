@@ -30,7 +30,7 @@ public class DatabaseSeeder
                 Balance = Random.Shared.Next(1000, 250000)
             };
 
-            await _usersRepository.SaveUserAsync(user, CancellationToken.None);
+            await _usersRepository.AddUserAsync(user, CancellationToken.None);
         }
         
         _logger.LogInformation("Database successfully seeded");

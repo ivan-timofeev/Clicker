@@ -1,4 +1,5 @@
-﻿using Clicker.Application.Dto;
+﻿using Clicker.Api.Models;
+using Clicker.Application.Dto;
 using Clicker.Application.Features;
 using Clicker.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -21,19 +22,22 @@ public class UsersController : Controller
     }
 
     [HttpGet("{userId}")]
-    public async Task<IActionResult> GetUserAsync([FromRoute] string userId, CancellationToken cancellationToken)
+    public async Task<UserDto> GetUserAsync([FromRoute] string userId, CancellationToken cancellationToken)
     {
-        var user = await GetUser.Create(_usersRepository).ExecuteAsync(userId, cancellationToken);
-        return Ok(user);
+        var user = await GetUser
+            .Create(_usersRepository)
+            .ExecuteAsync(userId, cancellationToken);
+
+        return UserDto.FromModel(user);
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateUserAsync([FromBody] CreateUserRequest createUserRequest, CancellationToken cancellationToken)
+    public async Task<UserDto> CreateUserAsync([FromBody] CreateUserRequest createUserRequest, CancellationToken cancellationToken)
     {
         var createdUser = await CreateUser
             .Create(_userLoginAvailabilityChecker, _usersRepository)
             .ExecuteAsync(createUserRequest, cancellationToken);
 
-        return Ok(createdUser);
+        return UserDto.FromModel(createdUser);
     }
 }

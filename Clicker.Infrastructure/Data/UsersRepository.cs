@@ -13,7 +13,7 @@ public class InMemoryUsersRepository : IUsersRepository
         _inMemoryUsersStorage = inMemoryUsersStorage;
     }
     
-    public Task SaveUserAsync(User user, CancellationToken cancellationToken)
+    public Task AddUserAsync(User user, CancellationToken cancellationToken)
     {
         _inMemoryUsersStorage.Users.Add(user);
         return Task.CompletedTask;
@@ -43,4 +43,6 @@ public class InMemoryUsersRepository : IUsersRepository
         
         return Task.CompletedTask;
     }
+
+    public IQueryable<User> Users => _inMemoryUsersStorage.Users.AsQueryable();
 }

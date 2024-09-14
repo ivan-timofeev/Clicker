@@ -5,11 +5,13 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <InvariantGlobalization>true</InvariantGlobalization>
+        <UserSecretsId>118c63ee-ca10-4577-b822-f9cea2477db5</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="HotChocolate.AspNetCore" Version="13.9.11" />
         <PackageReference Include="HotChocolate.Data" Version="13.9.11" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="8.0.8" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.0"/>
         <PackageReference Include="MongoDB.Driver" Version="2.28.0" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0"/>

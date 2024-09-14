@@ -19,6 +19,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Clicker.Application\Clicker.Application.csproj" />
       <ProjectReference Include="..\Clicker.Domain\Clicker.Domain.csproj" />
     </ItemGroup>
 

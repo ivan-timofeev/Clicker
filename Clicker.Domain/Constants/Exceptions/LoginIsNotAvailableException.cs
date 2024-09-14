@@ -2,10 +2,12 @@
 
 public class LoginIsNotAvailableException : UnfeasibleOperationException
 {
-    public string Login { get; }
+    public override string ExceptionSystemName => "LoginIsNotAvailable";
 
     public LoginIsNotAvailableException(string login)
+        : base("Login is not available.")
     {
-        Login = login;
+        Details.Add("login", login);
     }
+
 }
