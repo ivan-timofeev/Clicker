@@ -1,27 +1,26 @@
-﻿using Clicker.Api.Attributes;
+using Clicker.Api.Attributes;
 using Clicker.Api.Models;
 using Clicker.Application.Features;
-using Clicker.Domain.Constants.Permissions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Clicker.Api.Controllers;
 
 [ApiController]
-[Route("api/users")]
-public class UsersController : Controller
+[Route("api/current-user")]
+[AuthorizedUserRequired]
+public class CurrentUserController : Controller
 {
     private readonly IMediator _mediator;
 
-    public UsersController(IMediator mediator)
+    public CurrentUserController(IMediator mediator)
     {
         _mediator = mediator;
     }
 
-    [HttpGet("{userId}")]
-    [PermissionRequired(Permissions.Users.Read)]
+    [HttpGet]
     public async Task<UserDto> GetUserAsync(
-        [FromRoute] string userId,
+        [FromAuthorization] string userId,
         CancellationToken cancellationToken)
     {
         var user = await _mediator.Send(new GetUserRequest(userId), cancellationToken);
@@ -29,21 +28,9 @@ public class UsersController : Controller
         return UserDto.FromModel(user);
     }
 
-    [HttpPost]
-    [PermissionRequired(Permissions.Users.Write)]
-    public async Task<UserDto> CreateUserAsync(
-        [FromBody] CreateUserRequest createUserRequest,
-        CancellationToken cancellationToken)
-    {
-        var createdUser = await _mediator.Send(createUserRequest, cancellationToken);
-
-        return UserDto.FromModel(createdUser);
-    }
-
-    [HttpPost("api/users/{userId}/clicks")]
-    [PermissionRequired(Permissions.Users.Write)]
+    [HttpPost("process-click-sequence")]
     public async Task ProcessClickSequence(
-        [FromRoute] string userId,
+        [FromAuthorization] string userId,
         [FromBody] int clicksQuantity,
         CancellationToken cancellationToken)
     {

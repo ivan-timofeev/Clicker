@@ -3,25 +3,18 @@ using Clicker.Domain.Constants.Exceptions;
 
 namespace Clicker.Api.Middlewares;
 
-public class ExceptionMiddleware
+public class ExceptionMiddleware : IMiddleware
 {
-    private readonly RequestDelegate _next;
-
-    public ExceptionMiddleware(RequestDelegate next)
-    {
-        _next = next;
-    }
-    
-    public async Task InvokeAsync(HttpContext httpContext)
+    public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
         try
         {
-            await _next(httpContext);
+            await next(context);
         }
         catch (UnfeasibleOperationException exception)
         {
-            httpContext.Response.ContentType = "application/json";
-            httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
+            context.Response.ContentType = "application/json";
+            context.Response.StatusCode = StatusCodes.Status400BadRequest;
 
             var errorResponse = new
             {
@@ -30,12 +23,12 @@ public class ExceptionMiddleware
             };
 
             var jsonResponse = JsonSerializer.Serialize(errorResponse);
-            await httpContext.Response.WriteAsync(jsonResponse);
+            await context.Response.WriteAsync(jsonResponse);
         }
         catch (ArgumentException exception)
         {
-            httpContext.Response.ContentType = "application/json";
-            httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
+            context.Response.ContentType = "application/json";
+            context.Response.StatusCode = StatusCodes.Status400BadRequest;
 
             var errorResponse = new
             {
@@ -43,11 +36,24 @@ public class ExceptionMiddleware
             };
 
             var jsonResponse = JsonSerializer.Serialize(errorResponse);
-            await httpContext.Response.WriteAsync(jsonResponse);
+            await context.Response.WriteAsync(jsonResponse);
+        }
+        catch (UnauthorizedAccessException exception)
+        {
+            context.Response.ContentType = "application/json";
+            context.Response.StatusCode = StatusCodes.Status403Forbidden;
+
+            var errorResponse = new
+            {
+                exception.Message
+            };
+
+            var jsonResponse = JsonSerializer.Serialize(errorResponse);
+            await context.Response.WriteAsync(jsonResponse);
         }
         catch
         {
-            await _next(httpContext);
+            await next(context);
         }
     }
 }
