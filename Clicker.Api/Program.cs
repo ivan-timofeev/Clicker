@@ -1,10 +1,14 @@
 using System.Text.Json.Serialization;
+using Clicker.Api.SwaggerExamples;
 using Clicker.Api.Graphql.Queries;
 using Clicker.Api.Middlewares;
+using Clicker.Api.Services;
 using Clicker.Application.Features;
 using Clicker.Infrastructure.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,7 +35,34 @@ builder
     });
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Clicker API", Version = "v1" });
+    c.ExampleFilters();
+    
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Description = "Enter 'Bearer <JWT-TOKEN>'",
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        { 
+            new OpenApiSecurityScheme 
+            { 
+                Reference = new OpenApiReference 
+                { 
+                    Type = ReferenceType.SecurityScheme, 
+                    Id = "Bearer" 
+                } 
+            }, 
+            new string[] {} 
+        }
+    });
+});
 builder.Services.AddControllers().AddJsonOptions(jsonOptions =>
 {
     var jsonStringEnumConverter = new JsonStringEnumConverter();
@@ -43,26 +74,30 @@ builder
     .AddQueryType<FindUsersQuery>()
     .AddFiltering()
     .AddSorting();
+builder.Services.AddTransient<ExceptionMiddleware>();
+builder.Services.AddTransient<PermissionBasedAuthMiddleware>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddHttpLogging(o => o.CombineLogs = true);
 
 builder.Services.AddInMemoryInfrastructure();
 builder.Services.AddDatabaseSeeder();
+builder.Services.AddTransient<JwtService>();
+builder.Services.AddSwaggerExamplesFromAssemblyOf<CreateJwtRequestExample>();
 
 var app = builder.Build();
 app.UseMiddleware<ExceptionMiddleware>();
-app.UseAuthentication();
-app.UseAuthorization();
 
 app
     .UseRouting()
+    .UseMiddleware<PermissionBasedAuthMiddleware>()
+    .UseAuthentication()
     .UseEndpoints(s =>
     {
-        // Available at http://localhost:5066/swagger
+        // Swagger available at http://localhost:13450/swagger
         s.MapControllers();
         
-        // Available at http://localhost:5066/graphql
+        // GraphQL playground available at http://localhost:13450/graphql
         s.MapGraphQL();
     });
 
