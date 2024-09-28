@@ -4,5 +4,17 @@ namespace Clicker.Domain.Entities;
 
 public class GoogleUserAuthenticator : IUserAuthenticator
 {
-    public required string GoogleUserId { get; set; }
+    public string GoogleUserId { get; private set; }
+    
+    public GoogleUserAuthenticator(string googleUserId)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(googleUserId);
+        GoogleUserId = googleUserId;
+    }
+
+    public void SetGoogleUserId(string googleUserId)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(googleUserId);
+        GoogleUserId = googleUserId;
+    }
 }

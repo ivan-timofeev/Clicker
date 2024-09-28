@@ -1,4 +1,3 @@
-using Clicker.Application.Builder;
 using Clicker.Domain.Entities;
 using MediatR;
 
@@ -33,13 +32,12 @@ public class AddGoogleAuthenticatorToUserRequestHandler : IRequestHandler<AddGoo
 
         if (authenticator != default)
         {
-            authenticator.GoogleUserId = googleUserId;
+            authenticator.SetGoogleUserId(googleUserId);
             return Task.CompletedTask;
         }
 
-        user.Authenticators = new AuthenticatorsBuilder()
-            .AddGoogleAuthenticator(googleUserId)
-            .Build();
+        user.Authenticators.Add(new GoogleUserAuthenticator(googleUserId));
+
         return Task.CompletedTask;
     }
 }

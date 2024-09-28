@@ -1,4 +1,3 @@
-using Clicker.Api.Extensions;
 using Clicker.Api.Services;
 using Clicker.Application.Features;
 using Clicker.Domain.Constants.Exceptions;
@@ -22,7 +21,7 @@ public class GoogleAuthController : Controller
         _mediator = mediator;
         _jwtService = jwtService;
     }
-    
+
     [HttpGet("login")]
     public IActionResult LoginGoogle()
     {
@@ -39,9 +38,7 @@ public class GoogleAuthController : Controller
             throw new AuthenticationException(); 
         }
 
-        var googleUserId = authenticateResult.GetGoogleUserId();
-        var user = await _mediator.Send(new AuthenticateRequest(googleUserId), cancellationToken);
-
+        var user = await _mediator.Send(new AuthenticateRequest(authenticateResult.Principal), cancellationToken);
         return _jwtService.CreateJwtToken(user.Id, "User", permissions: [], DateTime.UtcNow.Date.AddDays(128));
     }
 }

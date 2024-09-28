@@ -8,6 +8,8 @@ namespace Clicker.Application.Features;
 public class CreateUserRequest : IRequest<User>
 {
     public string Login { get; }
+    public string? VisibleName { get; init; }
+    public string? Email { get; init; }
 
     public CreateUserRequest(string login)
     {
@@ -42,7 +44,12 @@ public class CreateUserRequestHandler : IRequestHandler<CreateUserRequest, User>
         {
             Id = Guid.NewGuid().ToString(),
             Login = request.Login,
-            Balance = 0
+            Balance = 0,
+            UserPersonalData = new UserPersonalData
+            {
+                Name = request.VisibleName,
+                Email = request.Email
+            }
         };
 
         await _usersRepository.AddUserAsync(user, cancellationToken);
