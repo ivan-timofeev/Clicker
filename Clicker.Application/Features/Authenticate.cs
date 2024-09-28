@@ -1,3 +1,5 @@
+using System.Security.Claims;
+using Clicker.Domain.Constants;
 using Clicker.Domain.Entities;
 using MediatR;
 
@@ -5,12 +7,11 @@ namespace Clicker.Application.Features;
 
 public class AuthenticateRequest : IRequest<User>
 {
-    public string GoogleUserId { get; }
+    public ClaimsPrincipal ClaimsPrincipal { get; }
 
-    public AuthenticateRequest(string googleUserId)
+    public AuthenticateRequest(ClaimsPrincipal сlaimsPrincipal)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(googleUserId);
-        GoogleUserId = googleUserId;
+        ClaimsPrincipal = сlaimsPrincipal;
     }
 }
 
@@ -22,17 +23,27 @@ public class AuthenticateRequestHandler : IRequestHandler<AuthenticateRequest, U
     {
         _mediator = mediator;
     }
-    
+
     public async Task<User> Handle(AuthenticateRequest request, CancellationToken cancellationToken)
     {
-        var user = await _mediator.Send(new FindUserByGoogleUserIdRequest(request.GoogleUserId), cancellationToken);
+        var googleUserId = request.ClaimsPrincipal.GetClaimValue(Security.OAuth.UserIdClaim);
+
+        var user = await _mediator.Send(new FindUserByGoogleUserIdRequest(googleUserId), cancellationToken);
         if (user != default)
         {
             return user;
         }
 
-        var createdUser = await _mediator.Send(new CreateUserRequest($"google-{request.GoogleUserId}"), cancellationToken);
-        await _mediator.Send(new AddGoogleAuthenticatorToUserRequest(createdUser, request.GoogleUserId), cancellationToken);
+        var createdUser = await _mediator.Send(
+            new CreateUserRequest(login: $"google-{googleUserId}")
+            {
+                Email = request.ClaimsPrincipal.FindClaimValue(Security.OAuth.EmailClaim),
+                VisibleName = request.ClaimsPrincipal.FindClaimValue(Security.OAuth.NameClaim)
+            },
+            cancellationToken);
+
+        await _mediator.Send(new AddGoogleAuthenticatorToUserRequest(createdUser, googleUserId), cancellationToken);
+
         return createdUser;
     }
 }
